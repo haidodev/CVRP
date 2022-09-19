@@ -176,6 +176,7 @@ void read_graph(){
             
         }
     }
+    int curent_city = 0;
     int edges;
     fi >> edges;
 
@@ -183,14 +184,14 @@ void read_graph(){
         string src, dst;
         fi >> src >> dst;
         if (encod.find(src) == encod.end()){
-            encod[src] = count_cities;
-            decod[count_cities] = src;
-            ++count_cities;
+            encod[src] = curent_city;
+            decod[curent_city] = src;
+            ++curent_city;
         }
         if (encod.find(dst) == encod.end()){
-            encod[dst] = count_cities;
-            decod[count_cities] = dst;
-            ++count_cities;
+            encod[dst] = curent_city;
+            decod[curent_city] = dst;
+            ++curent_city;
         }
         int src_idx = encod[src], dst_idx = encod[dst];
         // cout << src << ":" << src_idx << ", " << dst << ":" << dst_idx << endl;
@@ -198,6 +199,14 @@ void read_graph(){
         fi >> distance;
         graph[src_idx][dst_idx] = distance;
         graph[dst_idx][src_idx] = distance;
+    }
+    cout << "ENCODE: \n";
+    for (auto elm : encod){
+        cout << elm.first << " " << elm.second << endl;
+        }
+    cout << "DECODE: \n";
+    for (auto elm : decod){
+        cout << elm.first << " " << elm.second << endl;
     }
 }
 int main(){
