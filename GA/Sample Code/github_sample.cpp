@@ -33,7 +33,6 @@ void addBiEdge(int u,int v,int c)
 
 void encoding()
 {
-    ifstream cin("mygraphout");
     cin>>n>>m;
     init();
     for(int i=0; i<m; ++i)
@@ -200,11 +199,8 @@ int main()
     int last_best_solution(-1);
     int nb_iteration = 1;
     int infinite_iterations = (int)1e6; // limit of number of iterations to avoid infinit loop
-    int consecutive_not_update = 60;
-    while((consecutive_not_update) && (infinite_iterations--))
+    while((last_best_solution != cur_best_solution) && (infinite_iterations--))
     {
-        if (last_best_solution == cur_best_solution) --consecutive_not_update;
-        else consecutive_not_update = 60;
         last_best_solution = cur_best_solution;
         population_crossover();
         population_mutation();
@@ -216,7 +212,7 @@ int main()
     cout<<"Genetic algorithm solution weight: "<<evaluation(bstSol)<<endl;
     cout<<"Genetic algorithm's outputed path : ";
     decoding(bstSol);
-    cout << endl << evaluation({0, 24, 23, 22, 25, 21, 20, 16, 17, 19, 18, 15, 10, 11, 12, 14, 13, 9, 8, 7, 6, 4, 5, 3, 2, 1});
-    //cout<<endl<<"Optimal solution weight: "<<optimalSolution(n)<<endl;
+    cout<<endl<<"Optimal solution weight: "<<optimalSolution(n)<<endl;
     return 0;
 }
+

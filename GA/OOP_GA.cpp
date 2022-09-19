@@ -11,8 +11,8 @@ using namespace std;
 
 #define CROSSOVER_RATE 0.5
 #define MUTATION_RATE 0.1
-#define POPULATION_SIZE 100
-#define MAX_GENERATION 1000
+#define POPULATION_SIZE 20
+#define MAX_GENERATION 10000
 
 int count_cities = 0;
 double graph[1000][1000];
@@ -36,18 +36,17 @@ public:
     void mutate();
     double calculate_fitness();
     bool operator<(Individual idv1);
-    bool operator>(Individual idv1);
 
     void show_individual();
     void show_individual_();
 };
 Individual::Individual(int gen_lenth){
     this -> chromosome = generate_new_individual(gen_lenth);
-    this -> fitness = calculate_fitness();
+    this -> fitness = this -> calculate_fitness();
 }
 Individual::Individual(vector<int> chromosome){
     this -> chromosome = chromosome;
-    this -> fitness = calculate_fitness();
+    this -> fitness = this -> calculate_fitness();
 }
 void Individual::mutate(){
     int gen_len = (this -> chromosome).size();
@@ -60,32 +59,33 @@ void Individual::mutate(){
     int v1 = this -> chromosome[p1];
     this -> chromosome[p1] = this -> chromosome[p2];
     this -> chromosome[p2] = v1;
+    this -> fitness = this -> calculate_fitness();
 }
 double Individual::calculate_fitness(){
     int gen_len = (this -> chromosome).size();
     double route_len = 0;
     for (int i = 0; i < gen_len; ++i){
         int src = i % gen_len, dst = (i + 1) % gen_len;
-        route_len += graph[src][dst];
+        route_len += graph[this->chromosome[src]][this->chromosome[dst]];
     }
-    return 1.0 / route_len;
+    //return 1.0 / route_len;
+    return -route_len;
 }
 bool Individual::operator<(Individual idv){
-    return this -> fitness < idv.fitness;
-}
-bool Individual::operator>(Individual idv){
-    return this -> fitness > idv.fitness;
+    return (this->fitness) > (idv.fitness);
 }
 void Individual::show_individual(){
     for (int node : this->chromosome){
         cout << node << " ";
     }
+    cout << ",Path length: " << -this -> fitness;
     cout << endl;
 }
 void Individual::show_individual_(){
     for (int node : this->chromosome){
         cout << decod[node] << " ";
     }
+    cout << ",Path length: " << -this -> fitness;
     cout << endl;
 }
 class Population{
@@ -139,7 +139,8 @@ void Population::produce_offspring(){
         for (int j = i + 1; j < parent_range; ++j){
             double curent_rate = ((double) rand() / (RAND_MAX));
             if (curent_rate <= CROSSOVER_RATE){
-                this->population.push_back(this->crossover(this->population[i], this->population[j]));
+                Individual new_child = this->crossover(this->population[i], this->population[j]);
+                this->population.push_back(new_child);
             }
         }
     }
@@ -154,8 +155,11 @@ void Population::produce_mutation(){
 }
 // Change the way to 
 void Population::selection(){
-    sort(begin(this->population), end(this -> population));
-    while (this->population.size() > POPULATION_SIZE) this->population.pop_back();
+    vector<Individual> new_population;
+    for (Individual id : this->population) new_population.push_back(id);
+    sort(begin(new_population), end(new_population));
+    while (new_population.size() > POPULATION_SIZE) new_population.pop_back();
+    this->population = new_population;
 }
 void Population::show_population(){
     for (Individual id : this->population){
@@ -168,11 +172,11 @@ void Population::show_population_(){
     }
 }
 void read_graph(){
-    ifstream fi("in");
+    ifstream fi("mygraphout");
     fi >> count_cities;
     for (int i = 0; i < count_cities; ++i){
         for (int j = 0; j < count_cities; ++j){
-            graph[i][j] = INT_MAX;
+            graph[i][j] = 1000;
             
         }
     }
@@ -200,33 +204,50 @@ void read_graph(){
         graph[src_idx][dst_idx] = distance;
         graph[dst_idx][src_idx] = distance;
     }
-    cout << "ENCODE: \n";
-    for (auto elm : encod){
-        cout << elm.first << " " << elm.second << endl;
+    // cout << "ENCODE: \n";
+    // for (auto elm : encod){
+    //     cout << elm.first << " " << elm.second << endl;
+    //     }
+    // cout << "DECODE: \n";
+    // for (auto elm : decod){
+    //     cout << elm.first << " " << elm.second << endl;
+    // }
+}
+void show_graph(){
+    for (int i = 0; i < count_cities; ++i){
+        for (int j = 0; j < count_cities; ++j){
+            if (graph[i][j] != INT_MAX)
+            cout << graph[i][j] << "\t";
+            else cout << "X\t";
+            
         }
-    cout << "DECODE: \n";
-    for (auto elm : decod){
-        cout << elm.first << " " << elm.second << endl;
+        cout << endl;
     }
 }
 int main(){
     srand(time(NULL));
     read_graph();
+    //show_graph();
     Population p = Population(10, count_cities);
     Individual best_idv = p.population[0];
-    // for (int i = 0; i < 100; ++i){
-    //     p.produce_offspring();
-    //     p.produce_mutation();
-    //     p.selection();
-    //     best_idv = p.population[0];
-    // }
-    best_idv.show_individual_();
-    for (int i = 0; i < count_cities; ++i){
-        for (int j = 0; j < count_cities; ++j){
-            cout << graph[i][j] << "\t";
-            
+    int cur_best = INT_MAX, continuous_unchanged = 2;
+    int cur_gen = 0;
+    while (cur_gen < MAX_GENERATION && continuous_unchanged > 0){
+        p.produce_offspring();
+        p.produce_mutation();
+        p.selection();
+        best_idv = p.population[0];
+        if (cur_best == best_idv.fitness) --continuous_unchanged;
+        else {
+            continuous_unchanged = 5;
+            cur_best = best_idv.fitness;
         }
-        cout << endl;
+        ++cur_gen;
     }
-
+    cout << cur_gen << endl;
+    for (int i = 0; i < 100; ++i){
+        
+    }
+    cout << "BEST IDV: ";
+    best_idv.show_individual_();
 }
