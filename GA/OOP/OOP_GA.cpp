@@ -7,6 +7,8 @@
 #include <string>
 #include <map>
 #include <limits.h>
+#include "utilities.h"
+#include "popuplation_class.h"
 using namespace std;
 
 #define CROSSOVER_RATE 0.5
@@ -14,40 +16,12 @@ using namespace std;
 #define POPULATION_SIZE 20
 #define MAX_GENERATION 10000
 
+using namespace std;
 int count_cities = 0;
 double graph[1000][1000];
 map<string, int> encod;
 map<int, string> decod;
 
-vector<int> generate_new_individual(int gen_length){
-    vector<int> new_gene;
-    for (int i = 0; i < gen_length; ++i){
-        new_gene.push_back(i);
-    }
-    random_shuffle ( new_gene.begin(), new_gene.end() );
-    return new_gene;
-}
-vector<int> generate_order(vector<int> &arr){
-    int arr_sz = arr.size();
-    vector<int> order(arr_sz);
-    for (int i = 0; i < arr_sz; ++i){
-        order[arr[i]] = i;
-    }
-    return order;
-}
-class Individual{
-public:
-    vector<int> chromosome;
-    double fitness;
-    Individual(int gen_length);
-    Individual(vector<int> chromosome);
-    void mutate();
-    double calculate_fitness();
-    bool operator<(Individual idv1);
-
-    void show_individual();
-    void show_individual_();
-};
 Individual::Individual(int gen_lenth){
     this -> chromosome = generate_new_individual(gen_lenth);
     this -> fitness = this -> calculate_fitness();
@@ -96,18 +70,6 @@ void Individual::show_individual_(){
     cout << ",Path length: " << -this -> fitness;
     cout << endl;
 }
-class Population{
-public:
-    vector<Individual> population;
-    Population(int population_sz, int gen_length);
-    void selection();
-    void produce_offspring();
-    void produce_mutation();
-    Individual crossover_1(Individual p1, Individual p2);
-    Individual crossover_2(Individual p1, Individual p2);
-    void show_population();
-    void show_population_();
-};
 Population::Population(int population_sz, int gen_length){
     while (population_sz--){
         this->population.push_back(Individual(gen_length));
