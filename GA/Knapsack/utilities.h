@@ -30,13 +30,13 @@ void read_items(){
         fi >> value[i];
     }
 }
+void show_item(int i){
+    cout << "Item " << item_name[i] << ", weight: " << weight[i] << ", value: " << value[i] << endl;
+}
 void show_items(){
     for (int i = 0; i < count_items; ++i){
           show_item(i);
     }
-}
-void show_item(int i){
-    cout << "Item " << item_name[i] << ", weight: " << weight[i] << ", value: " << value[i] << endl;
 }
 double generate_new_rate(){
     return (double) rand() / (RAND_MAX);

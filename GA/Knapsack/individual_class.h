@@ -45,6 +45,6 @@ void Individual::show_individual(){
         int node = this->chromosome[i];
         if (node) show_item(i);
     }
-    cout << ",Path length: " << -this -> fitness;
+    cout << ",Max Value: " << this -> fitness;
     cout << endl;
 }

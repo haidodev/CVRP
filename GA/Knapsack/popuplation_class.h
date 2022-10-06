@@ -34,7 +34,7 @@ void Population::produce_offspring(){
             
             if (generate_new_rate() <= CROSSOVER_RATE){
                 Individual new_child = this->crossover(this->population[i], this->population[j]);
-                this->population.push_back(new_child);
+                if (feasible_group(new_child.chromosome)) this->population.push_back(new_child);
             }
         }
     }
