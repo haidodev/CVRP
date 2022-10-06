@@ -5,12 +5,14 @@
 #include <random>
 #include <algorithm>
 #include <time.h>
+#include <iostream>
 #include <limits.h>
 
 #define CROSSOVER_RATE 0.5
-#define MUTATION_RATE 0.1
+#define MUTATION_RATE 0.3
 #define POPULATION_SIZE 20
 #define MAX_GENERATION 10000
+#define MAX_CONTINUOUS_UNCHANGED 100
 
 using namespace std;
 int count_cities = 0;

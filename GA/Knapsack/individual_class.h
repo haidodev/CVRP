@@ -1,5 +1,4 @@
-#include <vector>
-
+#include "utilities.h"
 class Individual{
 public:
     vector<int> chromosome;
@@ -11,7 +10,7 @@ public:
     bool operator<(Individual idv1);
 
     void show_individual();
-    void show_individual_();
+    // void show_individual_();
 };
 
 
@@ -38,11 +37,13 @@ double Individual::calculate_fitness(){
     return total_value;
 }
 bool Individual::operator<(Individual idv){
-    return (this->fitness) < (idv.fitness);
+    return (this->fitness) > (idv.fitness);
 }
 void Individual::show_individual(){
-    for (int node : this->chromosome){
-        cout << node << " ";
+    int gene_length = this->chromosome.size();
+    for (int i = 0; i < gene_length; ++i){
+        int node = this->chromosome[i];
+        if (node) show_item(i);
     }
     cout << ",Path length: " << -this -> fitness;
     cout << endl;

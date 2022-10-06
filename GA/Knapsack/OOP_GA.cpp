@@ -1,12 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <random>
-#include <time.h>
-#include <fstream>
-#include <string>
-#include <limits.h>
-#include "utilities.h"
 #include "popuplation_class.h"
 using namespace std;
 
@@ -35,5 +26,5 @@ int main(){
         
     }
     cout << "BEST IDV: ";
-    best_idv.show_individual_();
+    best_idv.show_individual();
 }

@@ -1,4 +1,4 @@
-#include "inital_setting.h"
+#include "initial_setting.h"
 
 using namespace std;
 vector<int> generate_new_individual(int gen_length){
@@ -69,4 +69,7 @@ void show_graph(){
         }
         cout << endl;
     }
+}
+double generate_new_rate(){
+    return (double) rand() / (RAND_MAX);
 }

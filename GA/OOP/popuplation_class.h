@@ -74,8 +74,7 @@ void Population::produce_offspring(){
     int parent_range = this->population.size();
     for (int i = 0; i < parent_range; ++i){
         for (int j = i + 1; j < parent_range; ++j){
-            double curent_rate = ((double) rand() / (RAND_MAX));
-            if (curent_rate <= CROSSOVER_RATE){
+            if (generate_new_rate() <= CROSSOVER_RATE){
                 Individual new_child = this->crossover_2(this->population[i], this->population[j]);
                 this->population.push_back(new_child);
             }
@@ -86,7 +85,7 @@ void Population::produce_offspring(){
 void Population::produce_mutation(){
     int population_sz = this->population.size();
     for (int i = 0; i < population_sz; ++i){
-        this->population[i].mutate();
+        if (generate_new_rate() <= MUTATION_RATE) this->population[i].mutate();
     }
     
 }

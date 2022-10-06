@@ -1,4 +1,3 @@
-#include <iostream>
 #include "popuplation_class.h"
 using namespace std;
 
@@ -9,7 +8,7 @@ int main(){
     //show_graph();
     Population p = Population(10, count_cities);
     Individual best_idv = p.population[0];
-    int cur_best = INT_MAX, continuous_unchanged = 20;
+    int cur_best = INT_MAX, continuous_unchanged = MAX_CONTINUOUS_UNCHANGED;
     int cur_gen = 0;
     while (cur_gen < MAX_GENERATION && continuous_unchanged > 0){
         p.produce_offspring();
@@ -18,7 +17,7 @@ int main(){
         best_idv = p.population[0];
         if (cur_best == best_idv.fitness) --continuous_unchanged;
         else {
-            continuous_unchanged = 20;
+            continuous_unchanged = MAX_CONTINUOUS_UNCHANGED;
             cur_best = best_idv.fitness;
         }
         ++cur_gen;
